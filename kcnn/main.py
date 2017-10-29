@@ -13,7 +13,7 @@ from model import CNN
 data_file = "IMDB-BINARY"
 
 # Community detection method
-community_detection ="louvain"
+community_detection = "louvain"
 
 # Hyper Parameters
 dim = 200
