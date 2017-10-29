@@ -10,7 +10,7 @@ from sklearn.model_selection import KFold
 from model import CNN
 
 # Dataset
-data_file = "IMDB-BINARY"
+data_file = "IMDB-MULTI"
 
 # Community detection method
 community_detection = "louvain"
