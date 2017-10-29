@@ -2,7 +2,6 @@ import random
 import networkx as nx
 import igraph as ig
 import numpy as np
-import copy, time
 from nystrom import Nystrom
 import torch
 import torch.utils.data as utils

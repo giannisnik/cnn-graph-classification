@@ -11,10 +11,9 @@ from model import CNN
 
 # Dataset
 data_file = "IMDB-BINARY"
-use_node_labels = True
-unlabeled_data_files = ["IMDB-BINARY", "IMDB-MULTI", "REDDIT-BINARY", "REDDIT-MULTI-5K", "COLLAB", "SYNTHETIC"]
-if data_file in unlabeled_data_files:
-    use_node_labels = False
+
+# Community detection method
+community_detection ="louvain"
 
 # Hyper Parameters
 dim = 200
@@ -23,12 +22,16 @@ num_epochs = 100
 num_filters = 256
 hidden_size = 128
 learning_rate = 0.0001
-community_detection ="louvain"
 
-if use_node_labels:
-   from graph_kernels_labeled import sp_kernel, wl_kernel
+
+
+unlabeled_data_files = ["IMDB-BINARY", "IMDB-MULTI", "REDDIT-BINARY", "REDDIT-MULTI-5K", "COLLAB", "SYNTHETIC"]
+if data_file in unlabeled_data_files:
+    use_node_labels = False
+    from graph_kernels import sp_kernel, wl_kernel
 else:
-   from graph_kernels import sp_kernel, wl_kernel
+	use_node_labels = True
+	from graph_kernels_labeled import sp_kernel, wl_kernel
 
 # Choose kernels
 kernels=[wl_kernel]

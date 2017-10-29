@@ -1,6 +1,4 @@
 import math
-import random
-
 import torch
 from torch.autograd import Variable
 

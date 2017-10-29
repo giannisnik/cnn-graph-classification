@@ -1,10 +1,7 @@
 import networkx as nx
 import numpy as np
-import time
 from collections import defaultdict
 import copy
-from scipy.sparse.linalg import eigs
-from scipy.sparse import lil_matrix
 
 
 def sp_kernel(g1, g2=None):
