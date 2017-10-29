@@ -9,13 +9,12 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import KFold
 from model import CNN
 
-# Parameters
+# Dataset
 data_file = "IMDB-BINARY"
 use_node_labels = True
 unlabeled_data_files = ["IMDB-BINARY", "IMDB-MULTI", "REDDIT-BINARY", "REDDIT-MULTI-5K", "COLLAB", "SYNTHETIC"]
 if data_file in unlabeled_data_files:
     use_node_labels = False
-community_detection ="louvain"
 
 # Hyper Parameters
 dim = 200
@@ -24,6 +23,7 @@ num_epochs = 100
 num_filters = 256
 hidden_size = 128
 learning_rate = 0.0001
+community_detection ="louvain"
 
 if use_node_labels:
    from graph_kernels_labeled import sp_kernel, wl_kernel
@@ -95,9 +95,7 @@ for train_index, test_index in kf.split(x):
 		    	loss = criterion(outputs, labels)
 		    loss.backward()
 		    optimizer.step()
-		    #if (i+1) % 10 == 0:
-		    #    print ('Epoch [%d/%d], Iter [%d/%d] Loss: %.4f' %(epoch+1, num_epochs, i+1, x.shape[0]//64, loss.data[0]))
-
+		    
 	# Test the Model
 	cnn.eval() 
 	correct = 0
