@@ -1,5 +1,5 @@
 ## Kernel Graph Convolutional Neural Networks
-Code for the paper **Kernel Graph Convolutional Neural Networks**.
+Code for the paper [Kernel Graph Convolutional Neural Networks](https://arxiv.org/pdf/1710.10689.pdf).
 
 ### Requirements
 Code is written in Python 3.6 and requires:
