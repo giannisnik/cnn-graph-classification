@@ -22,6 +22,6 @@ First, specify the dataset and the hyperparameters in the `main.py` file. Then, 
 $ python main.py
 ```
 
----
+-----------
 
 Provided for academic use only
