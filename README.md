@@ -22,6 +22,17 @@ First, specify the dataset and the hyperparameters in the `main.py` file. Then, 
 $ python main.py
 ```
 
+### Cite
+Please cite our paper if you use this code:
+```
+@article{nikolentzos2017kernel,
+  title={Kernel Graph Convolutional Neural Networks},
+  author={Nikolentzos, Giannis and Meladianos, Polykarpos and Tixier, Antoine Jean-Pierre and Skianis, Konstantinos and Vazirgiannis, Michalis},
+  journal={arXiv preprint arXiv:1710.10689},
+  year={2017}
+}
+```
+
 -----------
 
 Provided for academic use only
