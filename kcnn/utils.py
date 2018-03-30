@@ -1,7 +1,9 @@
 import random
 import networkx as nx
 import igraph as ig
+import os
 import numpy as np
+import shutil
 from nystrom import Nystrom
 import torch
 import torch.utils.data as utils
@@ -155,7 +157,7 @@ def compute_nystrom(ds_name, use_node_labels, embedding_dim, community_detection
 	return Q, subgraphs, labels, Q_t.shape
 
 
-def create_train_test_loaders(Q, x_train, x_test, y_train, y_test, batch_size):
+def create_train_val_test_loaders(Q, x_train, x_val, x_test, y_train, y_val, y_test, batch_size):
 	num_kernels = Q.shape[2]
 	max_document_length = x_train.shape[1]
 	dim = Q.shape[1]
@@ -179,6 +181,24 @@ def create_train_test_loaders(Q, x_train, x_test, y_train, y_test, batch_size):
 	train_loader = utils.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 
 	my_x = []
+	for i in range(x_val.shape[0]):
+		temp = np.zeros((1, num_kernels, max_document_length, dim))
+		for j in range(num_kernels):
+			for k in range(x_val.shape[1]):
+				temp[0,j,k,:] = Q[x_val[i,k],:,j].squeeze()
+		my_x.append(temp)
+
+	if torch.cuda.is_available():
+		tensor_x = torch.stack([torch.cuda.FloatTensor(i) for i in my_x]) # transform to torch tensors
+		tensor_y = torch.cuda.LongTensor(y_val.tolist())
+	else:
+		tensor_x = torch.stack([torch.Tensor(i) for i in my_x]) # transform to torch tensors
+		tensor_y = torch.from_numpy(np.asarray(y_val,dtype=np.int64))
+
+	val_dataset = utils.TensorDataset(tensor_x, tensor_y)
+	val_loader = utils.DataLoader(val_dataset, batch_size=1, shuffle=False)
+
+	my_x = []
 	for i in range(x_test.shape[0]):
 		temp = np.zeros((1, num_kernels, max_document_length, dim))
 		for j in range(num_kernels):
@@ -196,4 +216,32 @@ def create_train_test_loaders(Q, x_train, x_test, y_train, y_test, batch_size):
 	test_dataset = utils.TensorDataset(tensor_x, tensor_y)
 	test_loader = utils.DataLoader(test_dataset, batch_size=1, shuffle=False)
 
-	return train_loader, test_loader
+	return train_loader, val_loader, test_loader
+
+
+def save_checkpoint(state, is_best, directory):
+
+    if not os.path.isdir(directory):
+        os.makedirs(directory)
+    checkpoint_file = os.path.join(directory, 'checkpoint.pth')
+    best_model_file = os.path.join(directory, 'model_best.pth')
+    torch.save(state, checkpoint_file)
+    if is_best:
+        shutil.copyfile(checkpoint_file, best_model_file)
+
+
+class AverageMeter(object):
+    def __init__(self):
+        self.reset()
+
+    def reset(self):
+        self.val = 0
+        self.avg = 0
+        self.sum = 0
+        self.count = 0
+
+    def update(self, val, n=1):
+        self.val = val
+        self.sum += val * n
+        self.count += n
+        self.avg = self.sum / self.count

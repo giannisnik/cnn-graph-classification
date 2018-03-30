@@ -3,7 +3,7 @@ Code for the paper [Kernel Graph Convolutional Neural Networks](https://arxiv.or
 
 ### Requirements
 Code is written in Python 3.6 and requires:
-* PyTorch 0.2
+* PyTorch 0.3
 * NetworkX 1.11
 * igraph 0.7
 * scikit-learn 0.18
