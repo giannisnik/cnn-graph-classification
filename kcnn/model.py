@@ -1,6 +1,6 @@
 import torch.nn as nn
 import torch.nn.functional as F
-from init import xavier_normal,xavier_uniform,orthogonal
+from torch.nn.init import xavier_normal,xavier_uniform
 
 # CNN Model
 class CNN(nn.Module):

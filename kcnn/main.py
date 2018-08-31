@@ -24,14 +24,14 @@ parser.add_argument('--community-detection', default='louvain', help='community 
 parser.add_argument('--checkpoint-dir', default='./checkpoint/kcnn/', help='path to latest checkpoint')
 
 # Optimization Options
-parser.add_argument('--batch-size', type=int, default=64, metavar='N', help='Input batch size for training (default: 20)')
+parser.add_argument('--batch-size', type=int, default=32, metavar='N', help='Input batch size for training (default: 20)')
 parser.add_argument('--n-filters', type=int, default=128, metavar='N', help='Number of filters (default: 64)')
 parser.add_argument('--hidden-size', type=int, default=128, metavar='N', help='Size of hidden layer (default: 128)')
 parser.add_argument('--d', type=int, default=200, metavar='N', help='Dimensionality of graph embeddings (default: 100)')
 parser.add_argument('--no-cuda', action='store_true', default=False, help='Enables CUDA training')
 parser.add_argument('--epochs', type=int, default=100, metavar='N', help='Number of epochs to train (default: 360)')
 parser.add_argument('--lr', type=float, default=1e-3, metavar='LR', help='Initial learning rate (default: 1e-4)')
-parser.add_argument('--lr-decay', type=float, default=0.01, metavar='LR-DECAY', help='Learning rate decay factor (default: 0.6)')
+parser.add_argument('--lr-decay', type=float, default=0.1, metavar='LR-DECAY', help='Learning rate decay factor (default: 0.6)')
 parser.add_argument('--schedule', type=list, default=[0.1, 0.9], metavar='S', help='Percentage of epochs to start the learning rate decay [0, 1] (default: [0.1, 0.9])')
 
 # i/o
@@ -79,6 +79,7 @@ def main():
         for j in range(len(communities)):
             x[i,j] = int(communities[j])
 
+    print(x[0,:])
 
     kf = KFold(n_splits=10, random_state=None)
     kf.shuffle=True
@@ -107,9 +108,6 @@ def main():
 
         evaluation = lambda output, target: torch.sum(output.eq(target)) / target.size()[0]
 
-        #print('Logger')
-        #logger = Logger(args.logPath)
-
         lr = args.lr
         lr_step = (args.lr-args.lr*args.lr_decay)/(args.epochs*args.schedule[1] - args.epochs*args.schedule[0])
 		  
@@ -129,7 +127,6 @@ def main():
 
             if epoch > args.epochs * args.schedule[0] and epoch < args.epochs * args.schedule[1]:
                 lr -= lr_step
-                #args.lr -= lr_step
                 for param_group in optimizer.param_groups:
                     param_group['lr'] = lr
 
@@ -142,9 +139,6 @@ def main():
             is_best = acc1 > best_acc1
             best_acc1 = max(acc1, best_acc1)
             save_checkpoint({'epoch': epoch + 1, 'state_dict': model.state_dict(), 'best_acc1': best_acc1, 'optimizer': optimizer.state_dict(), }, is_best=is_best, directory=args.checkpoint_dir)
-
-            # Logger step
-            #logger.log_value('learning_rate', args.lr).step()
 
         # get the best checkpoint and test it with test set
         best_model_file = os.path.join(args.checkpoint_dir, 'model_best.pth')
@@ -221,9 +215,6 @@ def train(train_loader, model, criterion, optimizer, epoch, evaluation):
                   'Avg accuracy {acc.val:.4f} ({acc.avg:.4f})'
                   .format(epoch, i, len(train_loader), batch_time=batch_time,
                           data_time=data_time, loss=losses, acc=avg_accuracy))
-                          
-    #logger.log_value('train_epoch_loss', losses.avg)
-    #logger.log_value('train_epoch_avg_accuracy', avg_accuracy.avg)
 
     print('Epoch: [{0}] Avg accuracy {acc.avg:.3f}; Average Loss {loss.avg:.3f}; Avg Time x Batch {b_time.avg:.3f}'
           .format(epoch, acc=avg_accuracy, loss=losses, b_time=batch_time))
@@ -268,10 +259,6 @@ def validate(val_loader, model, criterion, evaluation):
 
     print(' * Average accuracy {acc.avg:.3f}; Average Loss {loss.avg:.3f}'
           .format(acc=avg_accuracy, loss=losses))
-
-    #if logger is not None:
-    #    logger.log_value('test_epoch_loss', losses.avg)
-    #    logger.log_value('test_epoch_average_accuracy', avg_accuracy.avg)
 
     return avg_accuracy.avg
 

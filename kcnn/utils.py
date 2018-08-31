@@ -117,7 +117,7 @@ def community_detection(G_networkx, community_detection_method):
 def compute_communities(graphs, use_node_labels, community_detection_method):
 	communities = []
 	subgraphs = []
-	counter = 0
+	counter = 1
 	coms = []
 	for G in graphs:
 		c = community_detection(G, community_detection_method)
