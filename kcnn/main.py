@@ -106,7 +106,7 @@ def main():
 
         criterion = nn.CrossEntropyLoss()
 
-        evaluation = lambda output, target: float (torch.sum(output.eq(target))) / float (target.size()[0])
+        evaluation = lambda output, target: torch.sum(output.eq(target)) / target.size()[0]
 
         lr = args.lr
         lr_step = (args.lr-args.lr*args.lr_decay)/(args.epochs*args.schedule[1] - args.epochs*args.schedule[0])
