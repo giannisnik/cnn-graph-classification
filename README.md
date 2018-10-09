@@ -1,5 +1,5 @@
 ## Kernel Graph Convolutional Neural Networks
-Code for the paper [Kernel Graph Convolutional Neural Networks](https://arxiv.org/pdf/1710.10689.pdf).
+Code for the paper [Kernel Graph Convolutional Neural Networks](https://link.springer.com/chapter/10.1007/978-3-030-01418-6_3).
 
 ### Requirements
 Code is written in Python 3.6 and requires:
@@ -25,11 +25,13 @@ $ python main.py
 ### Cite
 Please cite our paper if you use this code:
 ```
-@article{nikolentzos2017kernel,
+@inproceedings{nikolentzos2018kernel,
   title={Kernel Graph Convolutional Neural Networks},
   author={Nikolentzos, Giannis and Meladianos, Polykarpos and Tixier, Antoine Jean-Pierre and Skianis, Konstantinos and Vazirgiannis, Michalis},
-  journal={arXiv preprint arXiv:1710.10689},
-  year={2017}
+  booktitle={International Conference on Artificial Neural Networks},
+  pages={22--32},
+  year={2018},
+  organization={Springer}
 }
 ```
 
